@@ -19,12 +19,12 @@ def presentation():
 def gethref(ip):
     url = ("http://" + ip)
     print("[x] ~ SCAN: " + url + " ~ [x]")
-    req = requests.get(url, timeout=6)
-    soup = BeautifulSoup(req.text, 'html.parser')
-    for link in soup.select('a[href*=".php?id="]'):
-        okay = (link["href"])
-        serv = (url + "/" + okay + "'")
-        try:
+    try:
+        req = requests.get(url, timeout=6)
+        soup = BeautifulSoup(req.text, 'html.parser')
+        for link in soup.select('a[href*=".php?id="]'):
+            okay = (link["href"])
+            serv = (url + "/" + okay + "'")
             reeqee = requests.get(serv, timeout=6)
             souper = BeautifulSoup(reeqee.text, "html.parser")
             if souper(text=lambda t: "SQL syntax" in t):
@@ -35,8 +35,8 @@ def gethref(ip):
             else:
                 print("[x] found sqli but no pass [x] : " + serv )
 			    pass
-        except:
-            pass
+    except:
+        pass
         
 			
 
