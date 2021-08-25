@@ -1,3 +1,4 @@
+#python3.9
 import requests 
 from bs4 import BeautifulSoup
 from lxml import html, etree
