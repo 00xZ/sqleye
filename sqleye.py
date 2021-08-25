@@ -34,7 +34,7 @@ def gethref(ip):
                 fo.close
             else:
                 print("[x] found sqli but no pass [x] : " + serv )
-			    pass
+                pass
     except:
         pass
         
