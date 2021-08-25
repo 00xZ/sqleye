@@ -30,7 +30,7 @@ def gethref(ip):
                 print(serv + " :  [!] VULN [!]")
                 fo = open("vulnSQLi.txt", "a+")
                 fo.write(serv + "\n")
-               fo.close
+                fo.close
             else:
                 print("[x] found sqli but no pass [x] : " + serv )
 			    pass
