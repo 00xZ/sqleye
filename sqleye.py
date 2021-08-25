@@ -34,9 +34,19 @@ def gethref(ip):
             print("[x] found sqli but no pass [x] : " + serv )
 			
 			
+
 def main():
 	presentation()
-	ip = str(sys.argv[1])
-	print("sent")
-	gethref(ip)
+	count = 0
+	if len(sys.argv) < 3:
+		print("use -f for file")
+		ip = str(sys.argv[1])
+		gethref(ip)
+	else:
+		input_file = open(sys.argv[2])
+		#threads = (sys.argv[3])
+		for i in input_file.readlines():
+		ip = i.strip("\n")
+		gethref(ip)
+
 main()
