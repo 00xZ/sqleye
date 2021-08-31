@@ -112,6 +112,9 @@ def loginsql(url, user_field, password_field, USERS, PASSWORDS, title, html_cont
 			fo.close
 		else:
 			print("   Login Fund:NOTVULN")
+			fo = open("LOGIN.txt", "a+")
+			fo.write(serv + "\n")
+			fo.close
 			gethref(url)
 			pass
 	except:
@@ -122,8 +125,8 @@ def loginsql(url, user_field, password_field, USERS, PASSWORDS, title, html_cont
 
         
 def title(ip):
+	url = ("http://" + ip + "/")
 	try:
-		url = ("http://" + ip + "/")
 		r = requests.get(url, timeout=6, verify=True)
 		soup = BeautifulSoup(r.content, 'lxml')
 		title = (soup.select_one('title').text)
@@ -135,7 +138,7 @@ def title(ip):
 		kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
 		loginsql(url, user_field, password_field, USERS, PASSWORDS , title, r.text)
 	except:
-		gethref(ip)
+		gethref(url)
 
 def main():
 	presentation()
@@ -152,3 +155,4 @@ def main():
 			title(ip)
 
 main()
+
