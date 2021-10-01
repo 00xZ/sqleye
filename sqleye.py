@@ -10,7 +10,7 @@ def presentation():
 
     print("[+] # #############################################")
     print("[+] #                                             #")
-    print("[+] #          I spy withmy little (SQL)eye       #")
+    print("[+] #          I spy with my little (SQL)eye      #")
     print("[+] #                                             #")
     print("[+] #      ~00xZ-                                 #")
     print("[+] #                                             #")
