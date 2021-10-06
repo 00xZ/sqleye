@@ -157,7 +157,7 @@ def title(ip):
 					#print("Appended branch: " + site) 
 					loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
 				except:
-					print("Branch already scanned" + site)
+					print("   [!]Branch already scanned: " + site)
 					pass
 			else:
 				pass
