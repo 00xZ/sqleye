@@ -188,20 +188,23 @@ def whatitbe(ip, proxy):
 		pass
 	else:
 		proxy = {"http": "http://" +proxy}
+	#print(proxy)
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	try:
-		reqeer = requests.get(url, timeout=10, headers=headers, proxies=proxy)
+		reqeer = requests.post(url, timeout=10, headers=headers, proxies=proxy)
 		title(url, proxy)
 	except:
 		print(" [!] Site Timed Out- "+url+" [!] ")
+		url = ("https://" +ip+ "/")
 		pass
 	try:
 		if proxy == '':
 			pass
 		else:
-			proxy = {"http": "http://" +proxy}
+			proxy = {"https": "http://" +proxy}
+		#print(proxy)
 		url = ("https://" +ip+ "/")
-		reqeer = requests.get(url, timeout=10, headers=headers, proxies=proxy)
+		reqeer = requests.post(url, timeout=10, headers=headers, proxies=proxy)
 		title(url, proxy)
 	except:
 		print(" [!] Site(s) Timed Out- "+url+" [!] ")
