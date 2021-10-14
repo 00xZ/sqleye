@@ -210,7 +210,7 @@ def main():
 		print("    Scan with proxy: sqleye.py (IP/ -f filename) -p 1.2.3.4")
 		print("    Scan ips in file use: sqleye.py -f filename")
 	elif str(sys.argv[1]) == "-f":
-		input_file = str(sys.argv[2])
+		input_file = open(sys.argv[2])
 		print ("Scanning from file: " + input_file)
 		proxy = ('')
 		try:
