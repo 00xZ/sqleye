@@ -184,8 +184,10 @@ def title(url, proxy):
 		gethref(url, proxy)
 def whatitbe(ip, proxy):
 	url = ("http://" + ip + "/")
-	print(proxy)
-	proxy = {"http": "http://" +proxy}
+	if proxy == '':
+		pass
+	else:
+		proxy = {"http": "http://" +proxy}
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	try:
 		reqeer = requests.get(url, timeout=10, headers=headers, proxies=proxy)
@@ -194,7 +196,10 @@ def whatitbe(ip, proxy):
 		print(" [!] Site Timed Out- "+url+" [!] ")
 		pass
 	try:
-		proxy = {"https": "http://" +proxy}
+		if proxy == '':
+			pass
+		else:
+			proxy = {"http": "http://" +proxy}
 		url = ("https://" +ip+ "/")
 		reqeer = requests.get(url, timeout=10, headers=headers, proxies=proxy)
 		title(url, proxy)
@@ -211,7 +216,6 @@ def main():
 		print("    Scan ips in file use: sqleye.py -f filename")
 	elif str(sys.argv[1]) == "-f":
 		input_file = open(sys.argv[2])
-		print ("Scanning from file: " + input_file)
 		proxy = ('')
 		try:
 			if str(sys.argv[3]) == "-p":
@@ -241,4 +245,3 @@ def main():
 		print("Use -h for help")
 		pass
 main()
-
