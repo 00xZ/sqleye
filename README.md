@@ -3,8 +3,11 @@
 
 
 use: 
-* python3 sqleye.py host.ip
+* python3 sqleye.py 1.3.3.7
 * python3 sqleye.py -f servers.txt
+* Proxy mode with -p
+* python3 sqleye.py 1.3.3.7 -p 6.9.4.20
+* python3 sqleye.py -f servers.txt -p 4.20.6.9
 
 
 requires :
