@@ -28,9 +28,6 @@ def gethref(site, proxy):
         for link in soup.select('a[href*="php?"]'):
             okay = (link["href"])
             serv = (okay + "'")
-            fo1 = open("maybeSQLi.txt", "a+")
-            fo1.write(serv + "\n")
-            fo1.close 
             try:
                 urlIIQ = bool(ur in okay)#Url Is In Quiry
                 print(urlIIQ)
@@ -38,6 +35,9 @@ def gethref(site, proxy):
                     okay = (ur + "/" + okay)
                 else: pass
             except: pass
+            fo1 = open("maybeSQLi.txt", "a+")
+            fo1.write(serv + "\n")
+            fo1.close 
             print("      [+] Sending payload " + serv)
             reeqee = requests.get(serv, timeout=6, headers=headers, proxies=proxy)
             souper = BeautifulSoup(reeqee.text, "html.parser")
