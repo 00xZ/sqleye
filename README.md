@@ -16,5 +16,7 @@ requires :
 This will scan a site and all links in that site, there is a blacklist which blacklists out site like google,facebook,youtube, and other big sites to prevent from a rabit hole scanning those site. 
 It works by getting all the href's and checking for the "id=" string then pushing a sqli input and checking for a error. it appends every site to a temp list to prevent inf. looping of scanning the same site
 
-! TODO:
-* scan for js files and check publicly known js programs for CVE's
+If errors such as:
+"AttributeError: module 'html5lib.treebuilders' has no attribute '_base'. Did you mean: 'base'?"
+
+downgrade html5lib, newer verions broke it$: pip install --upgrade html5lib==1.0b8
